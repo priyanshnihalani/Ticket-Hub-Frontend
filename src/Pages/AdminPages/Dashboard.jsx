@@ -74,7 +74,7 @@ const AdminDashboard = () => {
 
     const pieChartOptions = {
         chart: { type: "pie" },
-        //     title: { text: null },
+        title: { text: "" },
         credits: {
             enabled: false
         },
@@ -86,14 +86,14 @@ const AdminDashboard = () => {
         },
         series: [
             {
-                name: "Revenue",
+                name: "Events",
                 data: eventStatus,
             },
         ],
     };
 
     const loadEvents = async () => {
-        const res = await fetchEvents({isAdminEvent: true});
+        const res = await fetchEvents({ isAdminEvent: true, date: true });
         const allEvents = res.data.data.events
         setEvents(allEvents);
         const statusCount = { UPCOMING: 0, LIVE: 0, COMPLETED: 0 };
@@ -145,10 +145,8 @@ const AdminDashboard = () => {
         setDashBoardStatistics(modifiedStats)
         setCancelledCount(cancelledCountData)
     };
-
     const loadTickets = async () => {
         const response = await fetchTickets();
-
         const tickets = response?.data?.data;
 
         if (!tickets) {
@@ -156,18 +154,25 @@ const AdminDashboard = () => {
             return;
         }
 
-        const formatted = tickets.map((item) => ({
+        const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+        const recentBookings = tickets
+            .filter(ticket => new Date(ticket.createdAt) >= twentyFourHoursAgo)
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // FIXED
+            .slice(0, 2);
+
+        const formatted = recentBookings.map((item) => ({
             id: item.id,
             user: item.user?.name,
             event: item.event?.title,
             date: formatDate(item.event?.date),
-            rawDate: item.event?.date,
             time: item.event?.time,
             tickets: item.seats.join(', '),
             price: item.price,
             status: getStatus(item.event?.date, item.event?.time),
         }));
-        setBookings(formatted?.slice(-2));
+
+        setBookings(formatted);
     };
 
     useEffect(() => {
@@ -211,7 +216,12 @@ const AdminDashboard = () => {
                 <div className="bg-white rounded-2xl shadow-sm p-5">
                     <h3 className="font-semibold mb-1">Event Bookings</h3>
                     <p className="text-sm text-gray-500 mb-4">Top performing events</p>
-                    <HighchartsReact highcharts={Highcharts} options={barChartOptions} />
+                    {bookingCapacity.length == 0 && bookingCount.length == 0 && bookingRevenue.length == 0 && cancelCount.length == 0
+                        ?
+                        <p className="flex items-center justify-center min-h-full text-2xl font-medium">No Data Available</p>
+                        :
+                        <HighchartsReact highcharts={Highcharts} options={barChartOptions} />
+                    }
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-sm p-5">
@@ -222,7 +232,7 @@ const AdminDashboard = () => {
             </div>
 
             {/* RECENT BOOKINGS */}
-            <div>
+            {bookings.length > 0 && <div>
                 <div className="flex justify-between items-center mb-3">
                     <h2 className="text-lg font-semibold">Recent Bookings</h2>
                     <button className="text-orange-500 text-sm cursor-pointer font-medium"
@@ -249,7 +259,7 @@ const AdminDashboard = () => {
                         </div>
                     ))}
                 </div>
-            </div>
+            </div>}
         </div>
     );
 }

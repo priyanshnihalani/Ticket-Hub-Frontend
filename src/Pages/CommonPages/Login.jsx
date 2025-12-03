@@ -129,7 +129,7 @@ const Login = () => {
                     {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
 
                     {/* Forgot password */}
-                    {role === "user" && (
+                    {/* {role === "user" && (
                         <div className="text-right mt-2">
                             <button
                                 onClick={() => navigate('/forgot-password')}
@@ -139,7 +139,7 @@ const Login = () => {
                                 Forgot Password?
                             </button>
                         </div>
-                    )}
+                    )} */}
 
                     {/* Submit Button */}
                     <button
