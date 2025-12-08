@@ -18,7 +18,7 @@ const dashboardStats = [
         id: 2,
         title: "Available Events",
         value: 4,
-        tag: "Upcomming and Live",
+        tag: "Upcoming and Live",
         bg: "bg-purple-50",
         iconBg: "bg-purple-500",
     },

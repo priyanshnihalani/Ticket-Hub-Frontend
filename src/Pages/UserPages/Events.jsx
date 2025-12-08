@@ -17,7 +17,7 @@ const Events = () => {
     const loadEvents = async () => {
         const res = await fetchEvents()
         let status = "";
-        let upcommingCount = 0
+        let upcomingCount = 0
         let launchedCount = 0
         const formattedData = res.data.data.events.map((event) => {
             const isoDate = event.date
@@ -26,7 +26,7 @@ const Events = () => {
             const formatted = date.toLocaleDateString("en-US", options);
             status = getStatus(event.date, event.time);
             if (status === "LIVE") launchedCount++;
-            if (status === "UPCOMING") upcommingCount++;
+            if (status === "UPCOMING") upcomingCount++;
             return { ...event, date: formatted }
         })
         setEvents(formattedData.slice(0, 3));
@@ -36,7 +36,7 @@ const Events = () => {
                 return { ...item, value: totalBookings }
             }
             if (item.id == 2) {
-                return { ...item, value: launchedCount + upcommingCount }
+                return { ...item, value: launchedCount + upcomingCount }
             }
         })
         setDashBoardStatistics(modifiedStats)
