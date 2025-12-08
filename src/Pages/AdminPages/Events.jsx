@@ -103,8 +103,7 @@ const AdminEvents = () => {
       {/* Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {events.map((event) => {
-          const progress = ((parseInt(event.bookingCount) / event.capacity) * 100);
-          console.log(progress)
+          const progress = ((parseInt(event.bookingCount) / event.capacity) * 100).toFixed(2);
           return (
             <div
               key={event.id}

@@ -70,7 +70,7 @@ const MyBookings = () => {
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [selectedBooking, setSelectedBooking] = useState(null);
 
-    const id = JSON.parse(localStorage.getItem("authDetail")).id;
+    const id = JSON.parse(localStorage.getItem("authDetail-tickethub")).id;
 
     const loadEventsByUser = async () => {
         const response = await fetchTicketById(id);

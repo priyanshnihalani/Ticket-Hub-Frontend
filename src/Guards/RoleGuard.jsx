@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 
 export const RoleGuard = ({ allowedRoles = [], redirectTo = "/unauthorized" }) => {
-  const authData = JSON.parse(localStorage.getItem("authDetail") || "{}");
+  const authData = JSON.parse(localStorage.getItem("authDetail-tickethub") || "{}");
   const role = authData?.role;
 
   if (!allowedRoles.includes(role)) {

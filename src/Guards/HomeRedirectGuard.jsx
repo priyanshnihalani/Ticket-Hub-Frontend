@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 
 const HomeRedirect = () => {
-  const authData = JSON.parse(localStorage.getItem("authDetail") || "{}");
+  const authData = JSON.parse(localStorage.getItem("authDetail-tickethub") || "{}");
   const role = authData?.role;
 
   if (role === "admin") {

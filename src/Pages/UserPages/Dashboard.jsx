@@ -11,7 +11,6 @@ const dashboardStats = [
         id: 1,
         title: "Total Bookings",
         value: 2,
-        percentage: "+12%",
         bg: "bg-orange-50",
         iconBg: "bg-orange-500",
     },
@@ -27,7 +26,7 @@ const dashboardStats = [
 
 const Dashboard = () => {
     const navigate = useNavigate()
-    const user = JSON.parse(localStorage.getItem('authDetail'))
+    const user = JSON.parse(localStorage.getItem('authDetail-tickethub'))
     const name = user.name.split(' ')[0]
     const id = user.id;
     const [events, setEvents] = useState([])
@@ -73,6 +72,7 @@ const Dashboard = () => {
         // console.log(payload)
         alert(response?.data?.description)
         setOpen(false)
+        loadEvents()
     }
 
     return (
@@ -83,7 +83,7 @@ const Dashboard = () => {
                     {/* Greeting Section */}
                     <div className="mb-10">
                         <h1 className="text-3xl font-bold text-gray-900">
-                            Good day, {name}! 👋
+                            Good day, {name}! 
                         </h1>
                         <p className="text-gray-500 mt-1">
                             Here's what's happening with your bookings
@@ -103,11 +103,6 @@ const Dashboard = () => {
                                             <Users size={20} />
                                         </div>
                                         <div>
-                                            {stat.percentage && (
-                                                <span className="text-xs font-semibold text-orange-600 bg-orange-100 px-3 py-1 rounded-full">
-                                                    {stat.percentage}
-                                                </span>
-                                            )}
                                             {stat.tag && (
                                                 <span className="text-xs font-semibold text-purple-600 bg-purple-100 px-3 py-1 rounded-full">
                                                     {stat.tag}
@@ -120,8 +115,6 @@ const Dashboard = () => {
                                         <h3 className="text-3xl font-bold mt-1">{stat.value}</h3>
                                     </div>
                                 </div>
-
-
                             </div>
                         ))}
                     </div>

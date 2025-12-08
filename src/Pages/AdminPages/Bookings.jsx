@@ -36,6 +36,7 @@ export default function ManageBookings() {
             tickets: item.seats.join(', '),
             price: item.price,
             status: getStatus(item.event?.date, item.event?.time),
+            capacity: item?.event?.capacity
         }));
 
         setBookings(formatted);
@@ -72,6 +73,7 @@ export default function ManageBookings() {
     const openEditModal = (booking) => {
         setSelectedBooking(booking);
         setIsEditOpen(true);
+        console.log(booking)
     };
 
     const closeModal = () => {

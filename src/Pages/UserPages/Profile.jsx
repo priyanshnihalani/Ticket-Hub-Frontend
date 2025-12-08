@@ -10,7 +10,7 @@ const Profile = () => {
     const [formData, setFormData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
-    const id = JSON.parse(localStorage.getItem('authDetail')).id
+    const id = JSON.parse(localStorage.getItem('authDetail-tickethub')).id
 
     const getUserProfile = async () => {
         try {

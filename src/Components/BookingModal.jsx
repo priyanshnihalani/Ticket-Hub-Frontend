@@ -13,7 +13,6 @@ const BookingModal = ({ event, isOpen, onClose, onConfirm }) => {
   useEffect(() => {
     if (!event) return;
 
-    // event.allSeats => [["A1","A2"]] or maybe multiple arrays
     const generated = generateSeats(event.capacity || 0);
     const bookedSeats = (event.allSeats || []).flat();
 
@@ -179,11 +178,11 @@ const BookingModal = ({ event, isOpen, onClose, onConfirm }) => {
           </div>
           <div className="flex justify-between text-gray-700">
             <span>Price:</span>
-            <span>₹{pricePerTicket}</span>
+            <span>${pricePerTicket}</span>
           </div>
           <div className="flex justify-between font-bold text-orange-600 text-lg mt-1">
             <span>Total:</span>
-            <span>₹{total}</span>
+            <span>${total}</span>
           </div>
         </div>
 

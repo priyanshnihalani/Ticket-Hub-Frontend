@@ -7,7 +7,7 @@ import getStatus from "../../Helper/getStatus.js";
 
 const Events = () => {
 
-    const user = JSON.parse(localStorage.getItem('authDetail'))
+    const user = JSON.parse(localStorage.getItem('authDetail-tickethub'))
     const name = user.name.split(' ')[0]
     const id = user.id;
     const [events, setEvents] = useState([])
