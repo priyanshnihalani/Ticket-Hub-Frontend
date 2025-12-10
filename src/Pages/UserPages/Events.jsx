@@ -78,7 +78,7 @@ const Events = () => {
                                             <Clock size={16} /> {event.time}
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <Users size={16} /> {parseInt(event.bookingCount)}/{event.capacity} available
+                                            <Users size={16} /> {parseInt(event.bookingCount)}/{event.capacity} booked
                                         </div>
                                     </div>
 
