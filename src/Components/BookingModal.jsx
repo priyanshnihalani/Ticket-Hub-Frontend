@@ -111,7 +111,7 @@ const BookingModal = ({ event, isOpen, onClose, onConfirm }) => {
         </div>
 
         {/* SEAT SELECTION */}
-        <div className="mt-6 space-y-10 max-h-[350px] overflow-y-auto pr-2">
+        <div className="mt-6 space-y-10 max-h-[250px] overflow-y-auto pr-2">
 
           {Object.keys(groupedSeats).map((rowKey) => {
 

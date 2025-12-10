@@ -134,7 +134,7 @@ const EditBookingModal = ({
                     <div>
                         <label className="text-sm font-medium">Select Seats</label>
 
-                        <div className="mt-4 overflow-y-auto max-h-[280px] space-y-10 bg-orange-50 pr-2 rounded-lg">
+                        <div className="mt-4 overflow-y-auto max-h-[250px] space-y-10 bg-orange-50 pr-2 rounded-lg">
 
                             {Object.keys(groupedSeats).map((rowKey) => {
                                 const rowSeats = groupedSeats[rowKey];
