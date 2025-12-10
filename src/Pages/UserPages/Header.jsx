@@ -3,7 +3,6 @@ import { Bell, LogOut, } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import LogoutModal from "../../Components/Logout";
 
-// ================= Header With Integrated Logout =================
 const Header = () => {
   const [showLogout, setShowLogout] = useState(false);
   const navigate = useNavigate();

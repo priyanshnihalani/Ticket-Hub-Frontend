@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { User, ShieldCheck, Mail, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../Services/API/UserAPI.js";
+import { UserApi } from "../../Services/API/UserAPI";
 const Login = () => {
     const [role, setRole] = useState("user");
     const [form, setForm] = useState({ email: "", password: "" });
@@ -39,10 +39,10 @@ const Login = () => {
         setIsLoading(true);
 
         try {
-            const res = await loginUser({ ...form, role });
-            const apiCode = res?.data?.code;
+            const res = await UserApi.loginUser({ ...form, role });
+            const apiCode = res?.code;
             if (apiCode === 200) {
-                localStorage.setItem("authDetail-tickethub", JSON.stringify(res.data.data));
+                localStorage.setItem("authDetail-tickethub", JSON.stringify(res.data));
                 navigate("/");
             }
 

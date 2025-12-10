@@ -94,7 +94,7 @@ const BookingModal = ({ event, isOpen, onClose, onConfirm }) => {
             <Clock size={18} /> {event.time}
           </div>
           <div className="flex items-center gap-2 text-gray-700">
-            <Users size={18} /> {event.capacity - event.allSeats.flat().length} seats available
+            <Users size={18} /> {event.capacity - (event.allSeats || []).flat().length} seats available
           </div>
           {timeLeft > 0 && (
             <div className="text-center text-red-600 font-semibold mr-6">

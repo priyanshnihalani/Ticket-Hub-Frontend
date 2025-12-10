@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Pencil, X, Download, ChevronDown, Search, XCircle } from "lucide-react";
-import { deleteTicket, exportTicketsExcel, fetchTickets, updateTicket } from "../../Services/API/BookAPI";
+import { TicketApi } from "../../Services/API/BookAPI";
 import getStatus from "../../Helper/getStatus";
 import formatDate from "../../Helper/formatDate";
 import EditBookingModal from "../../Components/EditBookingModal";
@@ -17,9 +17,9 @@ export default function ManageBookings() {
     const [eventFilter, setEventFilter] = useState("");
 
     const loadTickets = async () => {
-        const response = await fetchTickets();
+        const response = await TicketApi.fetchTickets();
 
-        const tickets = response?.data?.data;
+        const tickets = response?.data;
 
         if (!tickets) {
             console.log("No ticket data received", response);
@@ -87,32 +87,28 @@ export default function ManageBookings() {
     };
 
     const handleSave = async (data) => {
-        await updateTicket(data.id, data)
+        await TicketApi.updateTicket(data.id, data)
         loadTickets()
         closeModal();
     };
 
     const deleteBooking = async (booking) => {
-        await deleteTicket(booking.id)
+        await TicketApi.deleteTicket(booking.id)
         loadTickets()
     }
 
     const handleExport = async (booking) => {
         try {
-
-            const response = await exportTicketsExcel(booking);
+            const response = await TicketApi.exportTicketsExcel(booking);
             const url = window.URL.createObjectURL(new Blob([response.data]));
 
-            // Create a temporary link element
             const link = document.createElement("a");
             link.href = url;
             link.setAttribute("download", "tickets.xlsx");
 
-            // Click link programmatically
             document.body.appendChild(link);
             link.click();
 
-            // Cleanup
             link.parentNode.removeChild(link);
             window.URL.revokeObjectURL(url);
         }

@@ -60,12 +60,17 @@ const EditBookingModal = ({
                 : allSeats.length > 80 ? "w-9 h-9"
                     : "w-10 h-10";
 
-    const groupedSeats = allSeats.reduce((group, seat) => {
-        const row = seat.number.charAt(0);
-        if (!group[row]) group[row] = [];
-        group[row].push(seat);
-        return group;
-    }, {});
+
+
+    const groupedSeats = {};
+
+    for (let seat of allSeats) {
+        const row = seat.number[0];
+        if (!groupedSeats[row]) {
+            groupedSeats[row] = [];
+        }
+        groupedSeats[row].push(seat);
+    }
 
     return (
         <div className="fixed min-h-80 inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">

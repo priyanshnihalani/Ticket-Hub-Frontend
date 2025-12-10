@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Calendar, Clock, Ticket, Eye, Download, X } from "lucide-react";
-import { deleteTicket, exportTicketsExcel, fetchTicketById } from "../../Services/API/BookAPI";
+import { Calendar, Clock, Ticket, Download, X } from "lucide-react";
+import { TicketApi } from "../../Services/API/BookAPI";
 import formatDate from "../../Helper/formatDate";
 import getStatus from "../../Helper/getStatus";
 
@@ -73,9 +73,9 @@ const MyBookings = () => {
     const id = JSON.parse(localStorage.getItem("authDetail-tickethub")).id;
 
     const loadEventsByUser = async () => {
-        const response = await fetchTicketById(id);
+        const response = await TicketApi.fetchTicketById(id);
 
-        const mapped = response.data.data.map((b) => ({
+        const mapped = response.data.map((b) => ({
             id: b.id,
             eventName: b.event.title,
             status: getStatus(b.event.date, b.event.time),
@@ -94,20 +94,17 @@ const MyBookings = () => {
 
     const handleDownload = async (booking) => {
         try {
-
-            const response = await exportTicketsExcel(booking);
+            console.log(booking)
+            const response = await TicketApi.exportTicketsExcel(booking);
             const url = window.URL.createObjectURL(new Blob([response.data]));
 
-            // Create a temporary link element
             const link = document.createElement("a");
             link.href = url;
             link.setAttribute("download", "tickets.xlsx");
 
-            // Click link programmatically
             document.body.appendChild(link);
             link.click();
 
-            // Cleanup
             link.parentNode.removeChild(link);
             window.URL.revokeObjectURL(url);
         }
@@ -212,7 +209,7 @@ const MyBookings = () => {
                     booking={selectedBooking}
                     onClose={() => setShowCancelModal(false)}
                     onConfirm={async (bookingToCancel) => {
-                        await deleteTicket(bookingToCancel.id)
+                        await TicketApi.deleteTicket(bookingToCancel.id)
                         setShowCancelModal(false);
                         loadEventsByUser()
                     }}

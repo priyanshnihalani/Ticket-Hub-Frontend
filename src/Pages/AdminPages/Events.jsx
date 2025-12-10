@@ -10,7 +10,7 @@ import {
   X
 } from "lucide-react";
 
-import { fetchEvents, createEvent, updateEvent, deleteEvent } from "../../Services/API/EventAPI.js";
+import { EventApi } from "../../Services/API/EventAPI.js";
 
 const AdminEvents = () => {
   const [events, setEvents] = useState([]);
@@ -27,12 +27,12 @@ const AdminEvents = () => {
 
 
   const loadEvents = async () => {
-    const res = await fetchEvents({ isAdminEvent: true });
-    setEvents(res.data.data.events);
+    const res = await EventApi.fetchEvents({ isAdminEvent: true, isEventPage: true });
+    setEvents(res.data.events);
   };
 
   useEffect(() => {
-    loadEvents()
+    loadEvents()  
   }, [])
 
   const openAddModal = () => {
@@ -56,9 +56,9 @@ const AdminEvents = () => {
 
   const handleSave = async () => {
     if (editingEvent) {
-      await updateEvent(editingEvent.id, formData);
+      await EventApi.updateEvent(editingEvent.id, formData);
     } else {
-      await createEvent(formData);
+      await EventApi.createEvent(formData);
     }
 
     setShowModal(false);
@@ -66,7 +66,7 @@ const AdminEvents = () => {
   };
 
   const handleDelete = async (id) => {
-    await deleteEvent(id);
+    await EventApi.deleteEvent(id);
     loadEvents();
   };
 
@@ -74,7 +74,7 @@ const AdminEvents = () => {
     try {
       const updatedStatus = !event.active;
 
-      await updateEvent(event.id, {
+      await EventApi.updateEvent(event.id, {
         active: updatedStatus
       });
 

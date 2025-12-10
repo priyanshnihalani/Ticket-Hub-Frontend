@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Calendar, Clock, Users } from "lucide-react";
-import { fetchEvents } from "../../Services/API/EventAPI.js";
+import { EventApi } from "../../Services/API/EventAPI.js";
 import BookingModal from "../../Components/BookingModal.jsx";
-import { createTicket } from "../../Services/API/BookAPI.js";
+import { TicketApi } from "../../Services/API/BookAPI.js";
 import getStatus from "../../Helper/getStatus.js";
 import { useNavigate } from "react-router-dom";
 
@@ -35,11 +35,12 @@ const Dashboard = () => {
     const [dashBoardStatasctics, setDashBoardStatistics] = useState(dashboardStats)
 
     const loadEvents = async () => {
-        const res = await fetchEvents()
+        const res = await EventApi.fetchEvents({ isUser: true })
+        console.log(res)
         let status = "";
         let upcommingCount = 0
         let launchedCount = 0
-        const formattedData = res.data.data.events.map((event) => {
+        const formattedData = res.data.events.map((event) => {
             const isoDate = event.date
             const date = new Date(isoDate);
             const options = { month: "short", day: "2-digit", year: "numeric" };
@@ -50,7 +51,7 @@ const Dashboard = () => {
             return { ...event, date: formatted }
         })
         setEvents(formattedData.slice(0, 3));
-        const totalBookings = res?.data?.data?.totalBookings
+        const totalBookings = res?.data?.totalBookings
         const modifiedStats = dashBoardStatasctics.map((item) => {
             if (item.id == 1) {
                 return { ...item, value: totalBookings }
@@ -68,9 +69,8 @@ const Dashboard = () => {
 
     const handleBooking = async (data) => {
         const payload = { eventId: data.id, userId: id, price: data.total, noOfTickets: data.ticketCount, seats: data.seats }
-        const response = await createTicket(payload)
-        // console.log(payload)
-        alert(response?.data?.description)
+        const response = await TicketApi.createTicket(payload)
+        alert(response?.description)
         setOpen(false)
         loadEvents()
     }
@@ -83,7 +83,7 @@ const Dashboard = () => {
                     {/* Greeting Section */}
                     <div className="mb-10">
                         <h1 className="text-3xl font-bold text-gray-900">
-                            Good day, {name}! 
+                            Good day, {name}!
                         </h1>
                         <p className="text-gray-500 mt-1">
                             Here's what's happening with your bookings

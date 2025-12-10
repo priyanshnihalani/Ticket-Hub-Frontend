@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { User, Mail, Phone, Calendar, Save, Edit2 } from "lucide-react";
-import { fetchUserById, updateUser } from "../../Services/API/UserAPI.js";
+import { UserApi } from "../../Services/API/UserAPI.js";
 
-// ----------------- MOCK API FUNCTION -----------------
-// Later you can replace this with real API call
 
 const Profile = () => {
     const [user, setUser] = useState(null);
@@ -15,13 +13,13 @@ const Profile = () => {
     const getUserProfile = async () => {
         try {
             setLoading(true)
-            const response = await fetchUserById(id)
-            setUser(response.data.data)
+            const response = await UserApi.fetchUserById(id)
+            setUser(response.data)
             setFormData({
-                name: response.data.data.name,
-                email: response.data.data.email,
-                memberSince: response.data.data.createdAt.split("T")[0],
-                phone: response.data.data.phone
+                name: response.data.name,
+                email: response.data.email,
+                memberSince: response.data.createdAt.split("T")[0],
+                phone: response.data.phone
             })
         }
         catch (error) {
@@ -42,7 +40,7 @@ const Profile = () => {
     };
 
     const handleSave = async () => {
-        const response = await updateUser(id, formData)
+        const response = await UserApi.updateUser(id, formData)
         console.log(response) 
         setIsEditing(false);
     };

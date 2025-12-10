@@ -2,16 +2,16 @@ import { CalendarCheck, DollarSign, Ticket } from "lucide-react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useEffect, useState } from "react";
-import { fetchEvents } from "../../Services/API/EventAPI";
+import { EventApi } from "../../Services/API/EventAPI";
 import getStatus from "../../Helper/getStatus";
 import formatDate from "../../Helper/formatDate";
-import { fetchTickets } from "../../Services/API/BookAPI";
+import { TicketApi } from "../../Services/API/BookAPI";
 import { useNavigate } from "react-router-dom";
 
 const stats = [
     {
         id: 1,
-        title: "Total Bookings",
+        title: "Total Bookings (24 hours)",
         value: 0,
         bg: "bg-orange-50",
         iconBg: "bg-orange-500",
@@ -19,7 +19,7 @@ const stats = [
     },
     {
         id: 2,
-        title: "Total Revenue",
+        title: "Total Revenue (24 hours)",
         value: 0,
         bg: "bg-green-50",
         iconBg: "bg-green-500",
@@ -93,17 +93,18 @@ const AdminDashboard = () => {
     };
 
     const loadEvents = async () => {
-        const res = await fetchEvents({ isAdminEvent: true, date: true });
-        const allEvents = res.data.data.events
+        const res = await EventApi.fetchEvents({ isAdminEvent: true, date: true });
+        const allEvents = res.data.events
         setEvents(allEvents);
+
         const statusCount = { UPCOMING: 0, LIVE: 0, COMPLETED: 0 };
 
         const modifiedStats = dashBoardStatasctics.map((item) => {
             if (item.id == 1) {
-                return { ...item, value: res.data?.data?.totalBookings }
+                return { ...item, value: res.data?.totalBookings }
             }
             if (item.id == 2) {
-                return { ...item, value: `$${res.data?.data?.totalRevenue}` }
+                return { ...item, value: `$${res.data?.totalRevenue}` }
             }
             return item
         })
@@ -146,8 +147,8 @@ const AdminDashboard = () => {
         setCancelledCount(cancelledCountData)
     };
     const loadTickets = async () => {
-        const response = await fetchTickets();
-        const tickets = response?.data?.data;
+        const response = await TicketApi.fetchTickets();
+        const tickets = response?.data;
 
         if (!tickets) {
             console.log("No ticket data received", response);
@@ -158,7 +159,7 @@ const AdminDashboard = () => {
 
         const recentBookings = tickets
             .filter(ticket => new Date(ticket.createdAt) >= twentyFourHoursAgo)
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // FIXED
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) 
             .slice(0, 2);
 
         const formatted = recentBookings.map((item) => ({
@@ -178,6 +179,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         loadEvents()
     }, [])
+    
     useEffect(() => {
         loadTickets()
     }, [])

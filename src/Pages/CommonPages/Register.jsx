@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { User, Mail, Phone, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { createUser } from "../../Services/API/UserAPI.js";
+import { UserApi } from "../../Services/API/UserAPI";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -61,11 +61,11 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      const res = await createUser({ ...formData, role: "user" });
-      if (res.data?.code === 201) {
-        localStorage.setItem("authDetail-tickethub", JSON.stringify(res.data.data));
+      const res = await UserApi.createUser({ ...formData, role: "user" });
+      if (res.code === 201) {
+        localStorage.setItem("authDetail-tickethub", JSON.stringify(res.data));
         navigate("/user/dashboard");
-        alert(res.data?.description || "Something went wrong");
+        alert(res.description || "Something went wrong");
       }
 
     } catch (error) {
