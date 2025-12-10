@@ -201,7 +201,6 @@ const EditBookingModal = ({
                             Selected: {selectedSeats.length ? selectedSeats.join(", ") : "None"}
                         </div>
                     </div>
-
                 </div>
 
                 <div className="flex justify-end gap-3 mt-6 shrink-0">

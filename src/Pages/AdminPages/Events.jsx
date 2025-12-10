@@ -313,7 +313,7 @@ const AdminEvents = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, capacity: e.target.value })
                     }
-                    className="p-2 bg-gray-100 rounded-full"
+                    className="w-full p-2 bg-gray-100 rounded-full"
                   />
                   {errors.capacity && (
                     <p className="text-red-500 text-sm mt-1">{errors.capacity}</p>
@@ -328,7 +328,7 @@ const AdminEvents = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, price: e.target.value })
                     }
-                    className="p-2 bg-gray-100 rounded-full"
+                    className="w-full p-2 bg-gray-100 rounded-full"
                   />
                   {errors.price && (
                     <p className="text-red-500 text-sm mt-1">{errors.price}</p>
