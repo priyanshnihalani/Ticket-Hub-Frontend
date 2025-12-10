@@ -1,10 +1,7 @@
-import { useState } from "react";
 import { Bell, LogOut, } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
-import LogoutModal from "../../Components/Logout";
 
 const Header = () => {
-  const [showLogout, setShowLogout] = useState(false);
   const navigate = useNavigate();
 
   const navClass = ({ isActive }) =>
@@ -44,7 +41,7 @@ const Header = () => {
             </button>
 
             <button
-              onClick={() => setShowLogout(true)}
+              onClick={() => handleLogoutConfirm()}
               className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 transition"
             >
               <LogOut className="w-4 h-4" />
@@ -71,13 +68,6 @@ const Header = () => {
           </ul>
         </nav>
       </header>
-
-      {/* Logout Modal */}
-      <LogoutModal
-        isOpen={showLogout}
-        onClose={() => setShowLogout(false)}
-        onConfirm={handleLogoutConfirm}
-      />
     </>
   );
 };

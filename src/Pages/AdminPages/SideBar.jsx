@@ -1,9 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Calendar, Ticket, LogOut } from "lucide-react";
-import LogoutModal from "../../Components/Logout";
-import { useState } from "react";
+
 const SideBar = () => {
-  const [showLogout, setShowLogout] = useState(false);
   const navigate = useNavigate()
   
   const menuItems = [
@@ -55,17 +53,12 @@ const SideBar = () => {
         {/* Logout Button */}
         <div className="p-5">
           <button className="cursor-pointer w-full flex items-center justify-center gap-2 py-3 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
-            onClick={() => setShowLogout(true)}
+            onClick={() => handleLogoutConfirm()}
           >
             <LogOut size={18} /> Logout
           </button>
         </div>
       </aside>
-      <LogoutModal
-        isOpen={showLogout}
-        onClose={() => setShowLogout(false)}
-        onConfirm={handleLogoutConfirm}
-      />
     </>
   );
 };
