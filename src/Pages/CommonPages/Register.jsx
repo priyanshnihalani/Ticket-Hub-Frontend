@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { User, Mail, Phone, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { UserApi } from "../../Services/API/UserAPI";
+import { ApiService } from "../../Services/ApiService";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      const res = await UserApi.createUser({ ...formData, role: "user" });
+      const res = await ApiService.post("/users/add", { ...formData, role: "user" })
       if (res.code === 201) {
         localStorage.setItem("authDetail-tickethub", JSON.stringify(res.data));
         navigate("/user/dashboard");

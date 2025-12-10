@@ -2,11 +2,10 @@ import { CalendarCheck, DollarSign, Ticket } from "lucide-react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useEffect, useState } from "react";
-import { EventApi } from "../../Services/API/EventAPI";
 import getStatus from "../../Helper/getStatus";
 import formatDate from "../../Helper/formatDate";
-import { TicketApi } from "../../Services/API/BookAPI";
 import { useNavigate } from "react-router-dom";
+import { ApiService } from "../../Services/ApiService";
 
 const stats = [
     {
@@ -93,7 +92,7 @@ const AdminDashboard = () => {
     };
 
     const loadEvents = async () => {
-        const res = await EventApi.fetchEvents({ isAdminEvent: true, date: true });
+        const res = await ApiService.post("/events/list", { isAdminEvent: true })
         const allEvents = res.data.events
         setEvents(allEvents);
 
@@ -147,7 +146,7 @@ const AdminDashboard = () => {
         setCancelledCount(cancelledCountData)
     };
     const loadTickets = async () => {
-        const response = await TicketApi.fetchTickets();
+        const response = await ApiService.get("/tickets/list")
         const tickets = response?.data;
 
         if (!tickets) {
@@ -159,7 +158,7 @@ const AdminDashboard = () => {
 
         const recentBookings = tickets
             .filter(ticket => new Date(ticket.createdAt) >= twentyFourHoursAgo)
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) 
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
             .slice(0, 2);
 
         const formatted = recentBookings.map((item) => ({
@@ -179,7 +178,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         loadEvents()
     }, [])
-    
+
     useEffect(() => {
         loadTickets()
     }, [])

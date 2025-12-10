@@ -1,10 +1,29 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
-export const AuthGuard = ({ redirectTo = "/login" }) => {
-    const isAuthenticated = localStorage.getItem("authDetail-tickethub");
+const AuthGuard = ({
+    children,
+    requireAuth = true,
+    allowedRoles = [],
+    redirectTo = "/login"
+}) => {
+    const authData = JSON.parse(
+        localStorage.getItem("authDetail-tickethub")
+    );
+    const isAuthenticated = !!authData
+    const userRole = authData?.role;
+    if (!requireAuth && isAuthenticated) {
+        return <Navigate to="/" replace />;
+    }
 
-    if (!isAuthenticated) {
+    if (requireAuth && !isAuthenticated) {
         return <Navigate to={redirectTo} replace />;
     }
-    return <Outlet />;
+
+    if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
+        return <Navigate to="/unauthorized" replace />;
+    }
+
+    return children;
 };
+
+export default AuthGuard;

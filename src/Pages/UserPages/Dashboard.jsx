@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { Calendar, Clock, Users } from "lucide-react";
-import { EventApi } from "../../Services/API/EventAPI.js";
 import BookingModal from "../../Components/BookingModal.jsx";
-import { TicketApi } from "../../Services/API/BookAPI.js";
 import getStatus from "../../Helper/getStatus.js";
 import { useNavigate } from "react-router-dom";
+import { ApiService } from "../../Services/ApiService.js";
 
 const dashboardStats = [
     {
@@ -35,7 +34,9 @@ const Dashboard = () => {
     const [dashBoardStatasctics, setDashBoardStatistics] = useState(dashboardStats)
 
     const loadEvents = async () => {
-        const res = await EventApi.fetchEvents({ isUser: true })
+
+        const res = await ApiService.post("/events/list", {})
+
         console.log(res)
         let status = "";
         let upcommingCount = 0
@@ -69,7 +70,7 @@ const Dashboard = () => {
 
     const handleBooking = async (data) => {
         const payload = { eventId: data.id, userId: id, price: data.total, noOfTickets: data.ticketCount, seats: data.seats }
-        const response = await TicketApi.createTicket(payload)
+        const response = await ApiService.post("/tickets/add", payload)
         alert(response?.description)
         setOpen(false)
         loadEvents()

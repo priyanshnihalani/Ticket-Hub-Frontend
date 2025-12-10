@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Pencil, X, Download, ChevronDown, Search, XCircle } from "lucide-react";
-import { TicketApi } from "../../Services/API/BookAPI";
 import getStatus from "../../Helper/getStatus";
 import formatDate from "../../Helper/formatDate";
 import EditBookingModal from "../../Components/EditBookingModal";
+import { ApiService } from "../../Services/ApiService";
 
 export default function ManageBookings() {
     const [bookings, setBookings] = useState([]);
@@ -17,10 +17,8 @@ export default function ManageBookings() {
     const [eventFilter, setEventFilter] = useState("");
 
     const loadTickets = async () => {
-        const response = await TicketApi.fetchTickets();
-
+        const response = await ApiService.get("/tickets/list");
         const tickets = response?.data;
-
         if (!tickets) {
             console.log("No ticket data received", response);
             return;
@@ -87,19 +85,19 @@ export default function ManageBookings() {
     };
 
     const handleSave = async (data) => {
-        await TicketApi.updateTicket(data.id, data)
+        await ApiService.put(`/tickets/update/${data.id}`, data)
         loadTickets()
         closeModal();
     };
 
     const deleteBooking = async (booking) => {
-        await TicketApi.deleteTicket(booking.id)
+        await ApiService.delete(`/tickets/delete/${booking.id}`)
         loadTickets()
     }
 
     const handleExport = async (booking) => {
         try {
-            const response = await TicketApi.exportTicketsExcel(booking);
+            const response = await ApiService.postBlob("/tickets/export/excel", Array.isArray(booking) ? booking : [booking])
             const url = window.URL.createObjectURL(new Blob([response.data]));
 
             const link = document.createElement("a");
@@ -187,7 +185,7 @@ export default function ManageBookings() {
                 </div>
 
                 <button className="cursor-pointer flex items-center gap-2 px-5 py-2 rounded-full border border-gray-200 bg-white shadow-sm hover:bg-gray-50 transition"
-                    onClick={()  => handleExport(filteredBookings)}>
+                    onClick={() => handleExport(filteredBookings)}>
                     <Download size={16} /> Export
                 </button>
             </div>

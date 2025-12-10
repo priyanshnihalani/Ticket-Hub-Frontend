@@ -10,8 +10,6 @@ import {
   X
 } from "lucide-react";
 
-import { EventApi } from "../../Services/API/EventAPI.js";
-
 const AdminEvents = () => {
   const [events, setEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -27,12 +25,12 @@ const AdminEvents = () => {
 
 
   const loadEvents = async () => {
-    const res = await EventApi.fetchEvents({ isAdminEvent: true, isEventPage: true });
+    const res = await ApiService.post("/events/list", { isAdminEvent: true, isEventPage: true });
     setEvents(res.data.events);
   };
 
   useEffect(() => {
-    loadEvents()  
+    loadEvents()
   }, [])
 
   const openAddModal = () => {
@@ -56,9 +54,9 @@ const AdminEvents = () => {
 
   const handleSave = async () => {
     if (editingEvent) {
-      await EventApi.updateEvent(editingEvent.id, formData);
+      await ApiService.put(`/events/${editingEvent.id}`, formData)
     } else {
-      await EventApi.createEvent(formData);
+      await ApiService.post("/events", formData)
     }
 
     setShowModal(false);
@@ -66,7 +64,7 @@ const AdminEvents = () => {
   };
 
   const handleDelete = async (id) => {
-    await EventApi.deleteEvent(id);
+    await ApiService.delete(`/events/${id}`),
     loadEvents();
   };
 
@@ -74,9 +72,9 @@ const AdminEvents = () => {
     try {
       const updatedStatus = !event.active;
 
-      await EventApi.updateEvent(event.id, {
+      await ApiService.put(`/events/${event.id}`, {
         active: updatedStatus
-      });
+      })
 
       loadEvents();
     } catch (error) {

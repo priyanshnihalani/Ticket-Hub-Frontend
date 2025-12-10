@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { User, Mail, Phone, Calendar, Save, Edit2 } from "lucide-react";
-import { UserApi } from "../../Services/API/UserAPI.js";
+import { ApiService } from "../../Services/ApiService.js";
 
 
 const Profile = () => {
@@ -9,11 +9,10 @@ const Profile = () => {
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const id = JSON.parse(localStorage.getItem('authDetail-tickethub')).id
-
     const getUserProfile = async () => {
         try {
             setLoading(true)
-            const response = await UserApi.fetchUserById(id)
+            const response = await ApiService.get(`/users/${id}`)
             setUser(response.data)
             setFormData({
                 name: response.data.name,
@@ -40,8 +39,7 @@ const Profile = () => {
     };
 
     const handleSave = async () => {
-        const response = await UserApi.updateUser(id, formData)
-        console.log(response) 
+        await ApiService.put(`/users/update/${id}`, formData) 
         setIsEditing(false);
     };
 

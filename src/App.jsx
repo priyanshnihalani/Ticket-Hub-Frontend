@@ -1,8 +1,6 @@
 import './App.css'
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { RoleGuard } from './Guards/RoleGuard';
-import { GuestGuard } from './Guards/GuestGuard';
-import { AuthGuard } from './Guards/AuthGuard';
+import AuthGuard from './Guards/AuthGuard';
 import Login from './Pages/CommonPages/Login';
 import Register from './Pages/CommonPages/Register';
 import Dashboard from './Pages/UserPages/Dashboard';
@@ -13,71 +11,62 @@ import AdminBookings from './Pages/AdminPages/Bookings';
 import AdminEvents from './Pages/AdminPages/Events';
 import Unauthorized from './Pages/CommonPages/Unauthorized';
 import ForgotPassword from './Pages/CommonPages/ForgotPassword';
-import HomeRedirect from './Guards/HomeRedirectGuard';
-
 import UserLayout from './Layout/UserLayout';
 import AdminLayout from './Layout/AdminLayout';
 import NotFound from './Pages/CommonPages/NotFound';
 import Events from './Pages/UserPages/Events';
+import RoleIndex from './Guards/RoleIndex';
 
 function App() {
 
   const router = createBrowserRouter([
 
-    // GUEST ROUTES (NO HEADER)
+    // ---------- PUBLIC ROUTES ----------
     {
-      element: <GuestGuard />,
+      path: "/login",
+      element: <AuthGuard requireAuth={false}><Login /></AuthGuard>
+    },
+    {
+      path: "/register",
+      element: <AuthGuard requireAuth={false}><Register /></AuthGuard>
+    },
+    {
+      path: "/forgot-password",
+      element: <AuthGuard requireAuth={false}><ForgotPassword /></AuthGuard>
+    },
+
+    // ---------- PROTECTED ROOT ----------
+    {
+      path: "/",
+      element: <AuthGuard requireAuth={true}><RoleIndex /></AuthGuard>
+    },
+
+    // ---------- USER ROUTES ----------
+    {
+      path: "/user",
+      element: <AuthGuard requireAuth={true} allowedRoles={["user"]}><UserLayout /></AuthGuard>,
       children: [
-        { path: "/login", element: <Login /> },
-        { path: "/register", element: <Register /> },
-        { path: "/forgot-password", element: <ForgotPassword /> },
+        { path: "dashboard", element: <Dashboard /> },
+        { path: "my-bookings", element: <MyBookings /> },
+        { path: "profile", element: <Profile /> },
+        { path: "events", element: <Events /> },
       ]
     },
 
-    // AUTHENTICATED ROUTES
+    // ---------- ADMIN ROUTES ----------
     {
-      element: <AuthGuard/>,
+      path: "/admin",
+      element: <AuthGuard requireAuth={true} allowedRoles={["admin"]}><AdminLayout /></AuthGuard>,
       children: [
-
-        { path: "/", element: <HomeRedirect/> },
-
-        {
-          element: <UserLayout />,
-          children: [
-            {
-              element: <RoleGuard allowedRoles={["user"]} />,
-              children: [
-                { path: "/user/dashboard", element: <Dashboard /> },
-                { path: "/user/my-bookings", element: <MyBookings /> },
-                { path: "/user/profile", element: <Profile /> },
-                { path: "/user/events", element: <Events /> },
-              ]
-            }
-          ]
-        },
-
-        {
-          element: <AdminLayout />,
-          children: [
-            {
-              element: <RoleGuard allowedRoles={["admin"]} />,
-              children: [
-                { path: "/admin/dashboard", element: <AdminDashboard /> },
-                { path: "/admin/bookings", element: <AdminBookings /> },
-                { path: "/admin/events", element: <AdminEvents /> },
-              ]
-            }
-          ]
-        },
-
-        {
-          path: "*",
-          element: <NotFound />
-        }
+        { path: "dashboard", element: <AdminDashboard /> },
+        { path: "bookings", element: <AdminBookings /> },
+        { path: "events", element: <AdminEvents /> },
       ]
     },
 
-    { path: "/unauthorized", element: <Unauthorized /> }
+    // ---------- OTHER ----------
+    { path: "/unauthorized", element: <Unauthorized /> },
+    { path: "*", element: <NotFound /> }
   ]);
 
   return <RouterProvider router={router} />;

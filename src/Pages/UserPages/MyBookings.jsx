@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Calendar, Clock, Ticket, Download, X } from "lucide-react";
-import { TicketApi } from "../../Services/API/BookAPI";
 import formatDate from "../../Helper/formatDate";
 import getStatus from "../../Helper/getStatus";
+import { ApiService } from "../../Services/ApiService";
 
 const statusStyles = {
     UPCOMING: "bg-orange-100 text-orange-600",
@@ -73,7 +73,7 @@ const MyBookings = () => {
     const id = JSON.parse(localStorage.getItem("authDetail-tickethub")).id;
 
     const loadEventsByUser = async () => {
-        const response = await TicketApi.fetchTicketById(id);
+        const response = await ApiService.get(`/tickets/list/${id}`)
 
         const mapped = response.data.map((b) => ({
             id: b.id,
@@ -95,7 +95,7 @@ const MyBookings = () => {
     const handleDownload = async (booking) => {
         try {
             console.log(booking)
-            const response = await TicketApi.exportTicketsExcel(booking);
+            const response = await ApiService.postBlob("/tickets/export/excel", Array.isArray(booking) ? booking : [booking])
             const url = window.URL.createObjectURL(new Blob([response.data]));
 
             const link = document.createElement("a");
@@ -209,7 +209,7 @@ const MyBookings = () => {
                     booking={selectedBooking}
                     onClose={() => setShowCancelModal(false)}
                     onConfirm={async (bookingToCancel) => {
-                        await TicketApi.deleteTicket(bookingToCancel.id)
+                        await ApiService.delete(`/tickets/delete/${bookingToCancel.id}`),
                         setShowCancelModal(false);
                         loadEventsByUser()
                     }}
